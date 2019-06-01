@@ -16,6 +16,7 @@
     "ffmpeg-static": "^2.4.0",
     "node-opus": "^0.3.1",
     "opusscript": "0.0.6",
+    "yt-search": "^0.4.1",
     "ytdl-core": "^0.29.1"
   }
 }

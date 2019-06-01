@@ -1,3 +1,6 @@
-{
-    "prefix": "|"
+{    "prefix": "|",
+    "emojiPause": "⏸",
+    "emojiResume": "▶",
+    "emojiStop": "⏹",
+    "emojiUp": "↕"
 }

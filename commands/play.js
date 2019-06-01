@@ -1,16 +1,28 @@
 const ytdl = require('ytdl-core');
+const search = require("yt-search");
+let URL;
 
 exports.run = async (client, message, args, ops) => {
+    const song = args;
+
+
     if (!message.member.voice.channel) return message.channel.send('Debes de estar en un chat de voz');
 
-    if (!args[0]) return message.channel.send('Por favor ingrese una URL para el comando');
+    //if (!args[0]) return message.channel.send('Por favor ingrese una URL para el comando');
 
-    let validate = await ytdl.validateURL(args[0]);
+    let validate = await ytdl.validateURL(song[0]);
 
-    if (!validate) return message.channel.send('Po favo ingresa a **valid** url siguiendo el comando ');
+    if (!validate) {
+        searchSong(song, client, ops, message, PlaySong);
+    }else{
+        PlaySong(song[0], client, ops, message);
+    }
 
-    let info = await ytdl.getInfo(args[0]);
-    ops.active.clear();
+}
+
+async function PlaySong(Songurl, client, ops, message) {
+    let info = await ytdl.getInfo(Songurl);
+
     let data = ops.active.get(message.guild.id) || {};
 
     if (!data.connection) data.connection = await message.member.voice.channel.join();
@@ -21,7 +33,7 @@ exports.run = async (client, message, args, ops) => {
     data.queue.push({
         songTitle: info.title,
         requester: message.author.tag,
-        url: args[0],
+        url: Songurl,
         announceChannel: message.channel.id
     });
 
@@ -45,10 +57,8 @@ exports.run = async (client, message, args, ops) => {
     let connection = await message.member.voiceChannel.join();
 
     let dispatcher = await connection.playStream(ytdl(args[0],{filter: 'audioonly'}));*/
-
-
-
 }
+
 
 async function play(client, ops, data) {
     client.channels.get(data.queue[0].announceChannel).send('Ahi va la rola');
@@ -93,10 +103,30 @@ function finish(client, ops, dispatcher) {
         let vc = client.guilds.get(dispatcher.guildID).me.voice.channel;
         setTimeout(() => {
             if (vc) vc.leave();
-        }, 120000);
 
-        
+        }, 60000);
+
+
     }
 
 
 }
+
+function searchSong(song, client, ops, message, callback) {
+    search(song.join(' '), function (err, res) {
+        if (err) return message.channel.send("Lo siento loco algo malo pasó");
+        let videos = res.videos.slice(0, 10);
+        URL = "https://www.youtube.com" + videos[0].url;
+
+
+        callback(URL, client, ops, message);
+    });
+
+
+}
+
+
+module.exports.help = {
+    name: 'play',
+    aliases: ['p']
+};

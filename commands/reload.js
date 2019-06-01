@@ -10,3 +10,7 @@ exports.run = (client, message, args, ops) => {
 
     message.channel.send(`Simon, listo perro`);
 }
+module.exports.help = {
+    name: 'reload',
+    aliases: ['r']
+};
