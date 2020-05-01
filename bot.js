@@ -9,6 +9,8 @@ const ownerID = process.env.ownerID;
 const active = new Map();
 const fs = require("fs");
 const aliases = [];
+require('dotenv').config();
+
 
 client.commands = new Discord.Collection();
 client.aliases = new Discord.Collection();
@@ -72,6 +74,8 @@ client.on('message', message => {
     }
 
 });
+
+
 
 client.login(process.env.token);
 //client.login(security.token);
